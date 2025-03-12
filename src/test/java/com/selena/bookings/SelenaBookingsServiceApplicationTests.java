@@ -1,10 +1,10 @@
-package com.example.bookings;
+package com.selena.bookings;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BookingsService​ApplicationTests {
+class SelenaBookingsServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

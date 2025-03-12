@@ -1,13 +1,13 @@
-package com.example.bookings;
+package com.selena.bookings;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BookingsService​Application {
+public class SelenaBookingsServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BookingsService​Application.class, args);
+		SpringApplication.run(SelenaBookingsServiceApplication.class, args);
 	}
 
 }
