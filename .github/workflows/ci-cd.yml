@@ -48,7 +48,6 @@ jobs:
 
       - name: Build the project with Maven
         run: |
-            ls -a
             cd selena-prod/bookings-service
             mvn clean install -DskipTests  # Сборка с пропуском тестов
               
@@ -59,7 +58,7 @@ jobs:
 
       - name: Run tests
         run: |
-          docker run --rm ghcr.io/${{ github.repository_owner }}/bookings-service:latest echo "Container is running"
+          docker run --rm ghcr.io/${{ github.repository_owner }}/bookings-service:latest mvn test
 
       # GitHub Container Registry
       - name: Log in to GitHub Container Registry
