@@ -48,6 +48,8 @@ jobs:
 
       - name: Build the project with Maven
         run: |
+            ls -a
+            cd selena-prod/bookings-service
             mvn clean install -DskipTests  # Сборка с пропуском тестов
               
       - name: Build Docker image
