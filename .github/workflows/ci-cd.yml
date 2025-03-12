@@ -1,0 +1,94 @@
+name: CI/CD Pipeline for Bookings Service
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    permissions:
+      packages: write   # Разрешение на запись в GHCR
+      contents: read    # Разрешение на чтение содержимого репозитория
+
+    steps:
+      - name: Checkout code
+        run: |
+          if [ ! -d "selena-prod/bookings-service/.git" ]; then
+            echo "Cloning the repository..."
+            git clone https://github.com/vitalii-q/selena-bookings-service selena-prod/bookings-service
+          else
+            echo "Repository already exists. Pulling the latest changes..."
+            cd selena-prod/bookings-service && git pull
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+              
+      - name: Build Docker image
+        run: |
+          cd selena-prod/bookings-service
+          docker build -t ghcr.io/${{ github.repository_owner }}/bookings-service:latest .
+
+      - name: Run tests
+        run: |
+          docker run --rm ghcr.io/${{ github.repository_owner }}/bookings-service:latest echo "Container is running"
+
+      # GitHub Container Registry
+      - name: Log in to GitHub Container Registry
+        run: |
+          docker login ghcr.io -u vitalii-q -p ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Push Docker image to GHCR
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/bookings-service:latest
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - name: Pull latest changes from selena-devops
+        run: |
+          cd selena-prod
+          if [ ! -d "selena-prod/.git" ]; then
+            echo "Initializing the repository and pulling the latest changes..."
+            git init
+            
+            # Проверяем, есть ли уже удаленный репозиторий
+            if ! git remote get-url origin &>/dev/null; then
+                echo "Adding remote origin..."
+                git remote add origin git@github.com:vitalii-q/selena-devops.git
+            else
+                echo "Remote origin is already set."
+            fi
+
+            git pull origin main
+          else
+            echo "Repository already exists. Pulling the latest changes..."
+            git pull origin main
+
+      - name: Remove existing containers
+        run: |
+          cd selena-prod
+          docker-compose down || true
+
+      - name: Deploy application
+        run: |
+          cd selena-prod
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker-compose pull bookings-service # Пуллит все контейнеры, если указать bookings-service
+          docker-compose up -d bookings-service
