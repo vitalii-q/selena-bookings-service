@@ -30,10 +30,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Set up Java
+      - name: Set up Java       # Шаг необходим для сборки Spring Boot приложения через Maven
         uses: actions/setup-java@v2
         with:
             java-version: '17'
+            distribution: 'adoptopenjdk'  # Указываем дистрибуцию, например, AdoptOpenJDK
+            java-package: jdk
+            architecture: x64
+            check-latest: false
 
       - name: Cache Docker layers
         uses: actions/cache@v4
