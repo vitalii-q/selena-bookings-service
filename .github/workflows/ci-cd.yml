@@ -76,7 +76,7 @@ jobs:
           
       - name: Push Docker image to GHCR
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/bookings-service:latest
+          docker push ghcr.io/${{ github.repository_owner }}/selena-hotels-service/bookings-service:latest
 
   deploy:
     runs-on: self-hosted
