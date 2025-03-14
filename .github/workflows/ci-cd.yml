@@ -54,13 +54,14 @@ jobs:
       - name: Build Docker image
         run: |
           cd selena-prod/bookings-service
-          docker build -t ghcr.io/${{ github.repository_owner }}/bookings-service:latest .
+          docker build -t ghcr.io/${{ github.repository_owner }}/selena-bookings-service/bookings-service:latest .
 
       - name: Run tests
       # Отключаем выполнение
         if: false 
         run: |
-          docker run --rm ghcr.io/${{ github.repository_owner }}/bookings-service:latest echo "Container is running"
+          docker run --rm ghcr.io/${{ github.repository_owner }}/selena-bookings-service/bookings-service:latest 
+          echo "Container is running"
 
       # - name: Verify container starts
       #   run: |
@@ -76,7 +77,7 @@ jobs:
           
       - name: Push Docker image to GHCR
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/selena-hotels-service/bookings-service:latest
+          docker push ghcr.io/${{ github.repository_owner }}/selena-bookings-service/bookings-service:latest
 
   deploy:
     runs-on: self-hosted
