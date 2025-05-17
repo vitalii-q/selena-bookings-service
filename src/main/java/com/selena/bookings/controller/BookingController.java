@@ -1,15 +1,50 @@
 package com.selena.bookings.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.selena.bookings.model.Booking;
+import com.selena.bookings.service.BookingService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
 
+    private final BookingService bookingService;
+
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
+
     @GetMapping("/test")
     public String test() {
         return "Booking service is running!";
+    }
+
+    @GetMapping
+    public List<Booking> getAllBookings() {
+        return bookingService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Booking getBooking(@PathVariable Long id) {
+        return bookingService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+    }
+
+    @PostMapping
+    public Booking createBooking(@RequestBody Booking booking) {
+        return bookingService.save(booking);
+    }
+
+    @PutMapping("/{id}")
+    public Booking updateBooking(@PathVariable Long id, @RequestBody Booking booking) {
+        booking.setId(id);
+        return bookingService.save(booking);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteBooking(@PathVariable Long id) {
+        bookingService.deleteById(id);
     }
 }
