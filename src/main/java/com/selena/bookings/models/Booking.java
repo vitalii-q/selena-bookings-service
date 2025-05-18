@@ -15,5 +15,11 @@ public class Booking {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
 
-    // геттеры и сеттеры
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

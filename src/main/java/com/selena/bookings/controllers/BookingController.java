@@ -1,7 +1,8 @@
-package com.selena.bookings.controller;
+package com.selena.bookings.controllers;
 
-import com.selena.bookings.model.Booking;
-import com.selena.bookings.service.BookingService;
+import com.selena.bookings.models.Booking;
+import com.selena.bookings.services.BookingService;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

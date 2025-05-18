@@ -1,7 +1,8 @@
-package com.selena.bookings.service;
+package com.selena.bookings.services;
 
-import com.selena.bookings.model.Booking;
-import com.selena.bookings.repository.BookingRepository;
+import com.selena.bookings.models.Booking;
+import com.selena.bookings.repositories.BookingRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;

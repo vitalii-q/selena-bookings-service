@@ -5,10 +5,10 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Копируем весь проект для выполнения тестов
-COPY . /app
+#COPY . /app
 
 # Копируем файл jar в контейнер (обрати внимание на имя jar-файла)
-COPY target/bookings-service-0.0.1-SNAPSHOT.jar /app/bookings-service.jar
+COPY target/bookings-service-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Устанавливаем Maven (если он не установлен в базовом образе)
 RUN apt-get update && apt-get install -y maven
@@ -20,4 +20,4 @@ RUN mvn test
 EXPOSE 9066
 
 # Запускаем Spring Boot приложение
-ENTRYPOINT ["java", "-jar", "bookings-service.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
