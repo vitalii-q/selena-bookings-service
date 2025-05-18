@@ -3,6 +3,8 @@ package com.selena.bookings.controllers;
 import com.selena.bookings.models.Booking;
 import com.selena.bookings.services.BookingService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,6 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private final BookingService bookingService;
 
@@ -20,6 +25,16 @@ public class BookingController {
     @GetMapping("/test")
     public String test() {
         return "Booking service is running!";
+    }
+
+    @GetMapping("/health/db")
+    public String checkDatabaseConnection() {
+        try {
+            jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+            return "✅ Database connection is OK";
+        } catch (Exception e) {
+            return "❌ Database connection failed: " + e.getMessage();
+        }
     }
 
     @GetMapping
