@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: prod
+
+  datasource:
+    url: jdbc:mariadb://prod-db:3306/bookings
+    username: booking_user
+    password: secure_password
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog.yaml
+
+server:
+  port: 9066

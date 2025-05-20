@@ -1,0 +1,23 @@
+# booking-service/Dockerfile.dev
+
+FROM openjdk:17-jdk-slim
+
+RUN echo "🔥 Используется Dockerfile.dev"
+
+WORKDIR /app
+
+# Копируем Maven Wrapper и pom.xml
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+
+# Скачиваем зависимости (чтобы использовать кеш)
+RUN ./mvnw dependency:go-offline
+
+# Копируем весь проект
+COPY . .
+
+# Открываем порт
+EXPOSE 8080
+
+# Указываем dev-профиль при запуске
+CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.profiles=dev"]
