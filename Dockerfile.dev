@@ -4,6 +4,8 @@ FROM openjdk:17-jdk-slim
 
 RUN echo "🔥 Используется Dockerfile.dev"
 
+RUN apt-get update && apt-get install -y default-mysql-client
+
 WORKDIR /app
 
 # Копируем Maven Wrapper и pom.xml
@@ -20,4 +22,4 @@ COPY . .
 EXPOSE 8080
 
 # Указываем dev-профиль при запуске
-CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.profiles=dev"]
+#CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.profiles=dev"]

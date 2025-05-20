@@ -5,6 +5,8 @@ FROM maven:3.9.5-eclipse-temurin-17 AS builder
 
 RUN echo "🔥 Используется Dockerfile"
 
+RUN apt-get update && apt-get install -y default-mysql-client
+
 # Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
