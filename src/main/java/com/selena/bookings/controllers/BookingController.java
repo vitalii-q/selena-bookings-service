@@ -24,7 +24,7 @@ public class BookingController {
 
     @GetMapping("/test")
     public String test() {
-        return "Booking service is running!";
+        return "Booking service is running!s12346";
     }
 
     @GetMapping("/health/db")
