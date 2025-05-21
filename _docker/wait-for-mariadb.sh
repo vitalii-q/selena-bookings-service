@@ -21,6 +21,7 @@ echo "MariaDB is available!"
 # (в твоём случае — запуск Spring Boot)
 exec "${@:2}"
 
+# Вариант запуска через .sh скрипт (текущий wait-for-mariadb.sh)
 # После того как база данных доступна, запускаем Spring Boot приложение
 #if [ "$SPRING_PROFILES_ACTIVE" = "dev" ]; then
 #  echo "Running in dev mode: starting Spring Boot with Maven"
