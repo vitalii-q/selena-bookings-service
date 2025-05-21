@@ -1,5 +1,6 @@
 package com.selena.bookings.controllers;
 
+import com.selena.bookings.dto.UpdateBookingRequest;
 import com.selena.bookings.models.Booking;
 import com.selena.bookings.services.BookingService;
 
@@ -38,7 +39,7 @@ public class BookingController {
 
     @GetMapping("/test")
     public String test() {
-        return "Booking service is running!s1234";
+        return "Booking service is running!";
     }
 
     @GetMapping("/health/db")
@@ -46,7 +47,7 @@ public class BookingController {
         logger.info("🔍 Проверка подключения к БД...");
         logger.info("🔗 URL: {}", dbUrl);
         logger.info("👤 Username: {}", dbUser);
-        logger.info("👤 Password: {}", dbPass);
+        //logger.info("👤 Password: {}", dbPass);
 
         try {
             jdbcTemplate.queryForObject("SELECT 1", Integer.class);
@@ -55,6 +56,11 @@ public class BookingController {
             e.printStackTrace();  // для дебага
             return "❌ Database connection failed: " + e.getMessage();
         }
+    }
+
+    @PostMapping
+    public Booking createBooking(@RequestBody Booking booking) {
+        return bookingService.save(booking);
     }
 
     @GetMapping
@@ -68,15 +74,9 @@ public class BookingController {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
     }
 
-    @PostMapping
-    public Booking createBooking(@RequestBody Booking booking) {
-        return bookingService.save(booking);
-    }
-
     @PutMapping("/{id}")
-    public Booking updateBooking(@PathVariable Long id, @RequestBody Booking booking) {
-        booking.setId(id);
-        return bookingService.save(booking);
+    public Booking updatePartialBooking(@PathVariable Long id, @RequestBody UpdateBookingRequest request) {
+        return bookingService.partialUpdate(id, request);
     }
 
     @DeleteMapping("/{id}")
