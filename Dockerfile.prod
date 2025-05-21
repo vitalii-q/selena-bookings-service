@@ -1,0 +1,28 @@
+# booking-service/Dockerfile
+
+# Stage 1: Сборка JAR
+FROM maven:3.9.5-eclipse-temurin-17 AS builder
+
+RUN echo "🔥 Используется Dockerfile.prod"
+
+RUN apt-get update && apt-get install -y default-mysql-client
+
+# Устанавливаем рабочую директорию в контейнере
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+
+# Stage 2: создаем легкий образ
+FROM eclipse-temurin:17-jdk-alpine
+
+WORKDIR /app
+
+# Копируем файл jar в контейнер
+COPY --from=builder /app/target/bookings-service-0.0.1-SNAPSHOT.jar app.jar
+
+# Запускаем Spring Boot приложение
+ENTRYPOINT ["java", "-jar", "app.jar"]
