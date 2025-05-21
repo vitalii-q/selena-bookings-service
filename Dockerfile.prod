@@ -24,5 +24,7 @@ WORKDIR /app
 # Копируем файл jar в контейнер
 COPY --from=builder /app/target/bookings-service-0.0.1-SNAPSHOT.jar app.jar
 
+EXPOSE 9086
+
 # Запускаем Spring Boot приложение
 ENTRYPOINT ["java", "-jar", "app.jar"]

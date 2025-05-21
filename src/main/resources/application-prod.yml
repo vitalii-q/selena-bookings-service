@@ -20,4 +20,4 @@ spring:
     change-log: classpath:db/changelog/db.changelog.yaml
 
 server:
-  port: 9066
+  port: 9086
