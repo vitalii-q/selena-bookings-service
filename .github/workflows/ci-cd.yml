@@ -115,4 +115,4 @@ jobs:
           cd selena-prod
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           docker-compose pull bookings-service # Пуллит все контейнеры, если указать bookings-service
-          docker-compose up -d bookings-service
+          docker-compose -f docker-compose.yml up -d bookings-service
