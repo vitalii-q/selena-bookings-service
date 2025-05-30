@@ -4,7 +4,8 @@ FROM openjdk:17-jdk-slim
 
 RUN echo "🔥 Используется Dockerfile.dev"
 
-RUN apt-get update && apt-get install -y default-mysql-client
+# Устанавливаем mysql-клиент и netcat
+RUN apt-get update && apt-get install -y default-mysql-client netcat
 
 WORKDIR /app
 

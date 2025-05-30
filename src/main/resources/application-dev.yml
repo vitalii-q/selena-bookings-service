@@ -16,9 +16,8 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
 
   liquibase:
-    #enabled: true
     change-log: classpath:db/changelog/db.changelog.yaml
-    enabled: false # отключили временно
+    enabled: true # приминение миграций при старте приложения
 
 server:
   port: 9066
