@@ -7,6 +7,10 @@ RETRY_COUNT=0
 echo "host: ${BOOKINGS_MARIA_DB_HOST}"
 echo "port: ${BOOKINGS_MARIA_DB_PORT_INNER}"
 
+echo "name: ${BOOKINGS_MARIA_DB_NAME}"
+echo "user: ${BOOKINGS_MARIA_DB_USER}"
+echo "pass: ${BOOKINGS_MARIA_DB_PASSWORD}"
+
 echo "⏳ Waiting for MariaDB at ${BOOKINGS_MARIA_DB_HOST}:${BOOKINGS_MARIA_DB_PORT_INNER}..."
 until nc -z "$BOOKINGS_MARIA_DB_HOST" "$BOOKINGS_MARIA_DB_PORT_INNER"; do
   RETRY_COUNT=$((RETRY_COUNT + 1))
@@ -28,15 +32,15 @@ if [ $? -ne 0 ]; then
 fi
 
 # Проверка и создание базы данных
-echo "🔍 Checking if database '${BOOKINGS_MARIA_DB_DB}' exists..."
-DB_EXISTS=$(mysql -h "$BOOKINGS_MARIA_DB_HOST" -P "$BOOKINGS_MARIA_DB_PORT_INNER" -u "$BOOKINGS_MARIA_DB_USER" -p"$BOOKINGS_MARIA_DB_PASSWORD" -sse "SHOW DATABASES LIKE '${BOOKINGS_MARIADB_DB}';")
+echo "🔍 Checking if database '${BOOKINGS_MARIA_DB_NAME}' exists..."
+DB_EXISTS=$(mysql -h "$BOOKINGS_MARIA_DB_HOST" -P "$BOOKINGS_MARIA_DB_PORT_INNER" -u "$BOOKINGS_MARIA_DB_USER" -p"$BOOKINGS_MARIA_DB_PASSWORD" -sse "SHOW DATABASES LIKE '${BOOKINGS_MARIA_DB_NAME}';")
 
-if [ "$DB_EXISTS" != "$BOOKINGS_MARIADB_DB" ]; then
-  echo "🛠 Creating database '${BOOKINGS_MARIADB_DB}'..."
-  mysql -h "$BOOKINGS_MARIADB_HOST" -P "$BOOKINGS_MARIADB_PORT" -u "$BOOKINGS_MARIADB_USER" -p"$BOOKINGS_MARIADB_PASSWORD" -e "CREATE DATABASE ${BOOKINGS_MARIADB_DB};"
+if [ "$DB_EXISTS" != "$BOOKINGS_MARIA_DB_NAME" ]; then
+  echo "🛠 Creating database '${BOOKINGS_MARIA_DB_NAME}'..."
+  mysql -h "$BOOKINGS_MARIA_DB_HOST" -P "$BOOKINGS_MARIA_DB_PORT_INNER" -u "$BOOKINGS_MARIA_DB_USER" -p"$BOOKINGS_MARIA_DB_PASSWORD" -e "CREATE DATABASE ${BOOKINGS_MARIA_DB_NAME};"
   echo "✅ Database created."
 else
-  echo "📦 Database '${BOOKINGS_MARIADB_DB}' already exists."
+  echo "📦 Database '${BOOKINGS_MARIA_DB_NAME}' already exists."
 fi
 
 # Путь к корню микросервиса

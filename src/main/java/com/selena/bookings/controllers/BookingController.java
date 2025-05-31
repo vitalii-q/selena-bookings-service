@@ -46,7 +46,7 @@ public class BookingController {
     public String checkDatabaseConnection() {
         logger.info("🔍 Проверка подключения к БД...");
         logger.info("🔗 URL: {}", dbUrl);
-        logger.info("👤 Username: {}", dbUser);
+        //logger.info("👤 Username: {}", dbUser);
         //logger.info("👤 Password: {}", dbPass);
 
         try {
