@@ -23,6 +23,18 @@ until nc -z "$BOOKINGS_MARIA_DB_HOST" "$BOOKINGS_MARIA_DB_PORT_INNER"; do
 done
 echo "✅ MariaDB is available!"
 
+# ➕ Проверка и создание пользователя
+echo "👤 Checking if user '${BOOKINGS_MARIA_DB_USER}' exists..."
+USER_EXISTS=$(mysql -h "$BOOKINGS_MARIA_DB_HOST" -P "$BOOKINGS_MARIA_DB_PORT_INNER" -u "$ROOT_USER" -p"$ROOT_PASS" -sse "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '${BOOKINGS_MARIA_DB_USER}');")
+if [ "$USER_EXISTS" = 1 ]; then
+  echo "✅ User '${BOOKINGS_MARIA_DB_USER}' already exists."
+else
+  echo "👷 Creating user '${BOOKINGS_MARIA_DB_USER}'..."
+  mysql -h "$BOOKINGS_MARIA_DB_HOST" -P "$BOOKINGS_MARIA_DB_PORT_INNER" -u "$ROOT_USER" -p"$ROOT_PASS" -e "CREATE USER '${BOOKINGS_MARIA_DB_USER}'@'%' IDENTIFIED BY '${BOOKINGS_MARIA_DB_PASSWORD}';"
+  mysql -h "$BOOKINGS_MARIA_DB_HOST" -P "$BOOKINGS_MARIA_DB_PORT_INNER" -u "$ROOT_USER" -p"$ROOT_PASS" -e "GRANT ALL PRIVILEGES ON *.* TO '${BOOKINGS_MARIA_DB_USER}'@'%'; FLUSH PRIVILEGES;"
+  echo "✅ User created and granted privileges."
+fi
+
 # Проверка соединения к MariaDB
 echo "🔐 Verifying connection to MariaDB..."
 mysql -h "$BOOKINGS_MARIA_DB_HOST" -P "$BOOKINGS_MARIA_DB_PORT_INNER" -u "$BOOKINGS_MARIA_DB_USER" -p"$BOOKINGS_MARIA_DB_PASSWORD" -e "SELECT 1;" > /dev/null
