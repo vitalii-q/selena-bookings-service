@@ -2,6 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: vitaly
+      preConditions:
+      - not:
+          - tableExists:
+              tableName: bookings
       changes:
         - createTable:
             tableName: bookings
