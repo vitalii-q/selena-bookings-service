@@ -4,12 +4,12 @@ set -e # Скрипт падает при любой ошибке
 MAX_RETRIES=10
 RETRY_COUNT=0
 
-echo "host: ${BOOKINGS_MARIA_DB_HOST}"
-echo "port: ${BOOKINGS_MARIA_DB_PORT_INNER}"
+#echo "host: ${BOOKINGS_MARIA_DB_HOST}"
+#echo "port: ${BOOKINGS_MARIA_DB_PORT_INNER}"
 
-echo "name: ${BOOKINGS_MARIA_DB_NAME}"
-echo "user: ${BOOKINGS_MARIA_DB_USER}"
-echo "pass: ${BOOKINGS_MARIA_DB_PASSWORD}"
+#echo "name: ${BOOKINGS_MARIA_DB_NAME}"
+#echo "user: ${BOOKINGS_MARIA_DB_USER}"
+#echo "pass: ${BOOKINGS_MARIA_DB_PASSWORD}"
 
 echo "⏳ Waiting for MariaDB at ${BOOKINGS_MARIA_DB_HOST}:${BOOKINGS_MARIA_DB_PORT_INNER}..."
 until nc -z "$BOOKINGS_MARIA_DB_HOST" "$BOOKINGS_MARIA_DB_PORT_INNER"; do
@@ -43,13 +43,23 @@ else
   echo "📦 Database '${BOOKINGS_MARIA_DB_NAME}' already exists."
 fi
 
-# Путь к корню микросервиса
-#BOOKINGS_SERVICE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-#echo "📁 BOOKINGS_SERVICE_ROOT=${BOOKINGS_SERVICE_ROOT}"
+# Проверка существования таблицы
+echo "🔍 Checking if table 'bookings' exists..."
+TABLE_EXISTS=$(mysql -h "$BOOKINGS_MARIA_DB_HOST" -P "$BOOKINGS_MARIA_DB_PORT_INNER" -u "$BOOKINGS_MARIA_DB_USER" -p"$BOOKINGS_MARIA_DB_PASSWORD" -D "$BOOKINGS_MARIA_DB_NAME" -sse "SHOW TABLES LIKE 'bookings';")
 
-# Если будут миграции — можно раскомментировать:
-# echo "📄 Running DB migrations..."
-# sh "${BOOKINGS_SERVICE_ROOT}/db/migrate.sh"
+if [ "$TABLE_EXISTS" = "${BOOKINGS_MARIA_DB_NAME}" ]; then
+  echo "📋 Table 'bookings' already exists. Skipping migrations."
+else
+  echo "📄 Running Liquibase migrations..."
+  export LIQUIBASE_CLASSPATH="/app/libs/mysql-connector-java-8.0.33.jar"
+  liquibase \
+    --driver=org.mariadb.jdbc.Driver \
+    --url="jdbc:mariadb://${BOOKINGS_MARIA_DB_HOST}:${BOOKINGS_MARIA_DB_PORT_INNER}/${BOOKINGS_MARIA_DB_NAME}" \
+    --username="${BOOKINGS_MARIA_DB_USER}" \
+    --password="${BOOKINGS_MARIA_DB_PASSWORD}" \
+    --changeLogFile="/src/main/resources/db/changelog/db.changelog.yaml" \
+    update
+fi
 
 # Запуск приложения (переданный через "--" аргумент: java -jar ...)
 echo "🚀 Starting bookings-service..."

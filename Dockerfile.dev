@@ -4,8 +4,18 @@ FROM openjdk:17-jdk-slim
 
 RUN echo "🔥 Используется Dockerfile.dev"
 
-# Устанавливаем mysql-клиент и netcat
-RUN apt-get update && apt-get install -y default-mysql-client netcat
+# Установка зависимостей
+RUN apt-get update && apt-get install -y default-mysql-client netcat curl unzip
+
+# Устанавливаем Liquibase
+RUN mkdir -p /opt/liquibase && \
+    curl -L https://github.com/liquibase/liquibase/releases/download/v4.26.0/liquibase-4.26.0.tar.gz \
+    | tar -xz -C /opt/liquibase && \
+    chmod +x /opt/liquibase/liquibase && \
+    ln -s /opt/liquibase/liquibase /usr/local/bin/liquibase || echo "Проверь, есть ли файл liquibase"
+
+# Проверка пути
+RUN ls -l /opt/liquibase
 
 WORKDIR /app
 

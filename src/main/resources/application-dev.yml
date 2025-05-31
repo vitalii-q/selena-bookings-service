@@ -17,7 +17,7 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog.yaml
-    enabled: true # приминение миграций при старте приложения
+    enabled: false # приминение миграций после старта приложения (отключаем так как выполняем до старта в entrypoint.sh)
 
 server:
   port: 9066
