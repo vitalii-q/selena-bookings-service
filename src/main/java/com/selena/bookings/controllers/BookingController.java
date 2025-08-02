@@ -51,7 +51,7 @@ public class BookingController {
 
         try {
             jdbcTemplate.queryForObject("SELECT 1", Integer.class);
-            return "✅ Database connection is OK";
+            return "Bookings-service: database connection is OK ✅";
         } catch (Exception e) {
             e.printStackTrace();  // для дебага
             return "❌ Database connection failed: " + e.getMessage();
