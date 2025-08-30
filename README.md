@@ -1,2 +1,2 @@
-# test
-Terraform infrastructure for the Selena project, including VPC, EC2, RDS, ECS, S3, IAM, and CloudWatch configurations.
+# selena-bookings-service (Java)
+Simple microservice for managing booking data within the Selena platform, designed for demonstration and integration with cloud infrastructure.
